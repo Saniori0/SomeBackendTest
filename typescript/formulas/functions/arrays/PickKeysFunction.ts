@@ -14,28 +14,31 @@ export class PickKeysFunction extends AbstractFunction {
     evaluate(scope: any) {
         this.Expr.checkEvaluationLimits(this);
 
-        const inputArray = this.arguments[0].evaluate(scope);
+        let inputArray = this.arguments[0].evaluate(scope);
 
         if (Typing.isNull(inputArray)) {
             return null;
         }
 
-        PickKeysFunction.validateValueIsArray(inputArray);
+        if (!Typing.isObject(inputArray)) {
+            throw new Error('fn1 :: pickKeys,' + Typing.getType(inputArray));
+        }
 
-        const keysToPickFromInputArray = this.arguments[1].evaluate(scope);
+        let keysToPickFromInputArray = this.arguments[1].evaluate(scope);
 
         if (Typing.isNull(keysToPickFromInputArray)) {
             return inputArray;
         }
 
-        PickKeysFunction.validateValueIsArray(keysToPickFromInputArray);
-
-        return [];
-    }
-
-    static validateValueIsArray(value: any) {
-        if (!Typing.isArray(value)) {
-            throw new Error('fn1 :: pickKeys,' + Typing.getType(value));
+        if (!Typing.isArray(keysToPickFromInputArray)) {
+            throw new Error('fn1 :: pickKeys,' + Typing.getType(keysToPickFromInputArray));
         }
+
+        return Object.keys(inputArray)
+            .filter(key => keysToPickFromInputArray.includes(key))
+            .reduce((obj, key) => {
+                obj[key] = inputArray[key];
+                return obj;
+            }, {} as { [key: string]: number });
     }
 }
