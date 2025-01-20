@@ -4348,33 +4348,30 @@ class PickKeysFunction extends AbstractFunction {
         return 2;
     }
     ;
+
     maxArguments() {
         return 2;
     }
     ;
+
     evaluate(scope) {
         this.Expr.checkEvaluationLimits(this);
-        const inputArray = this.arguments[0].evaluate(scope);
-        const keysToPickFromInputArray = this.arguments[1].evaluate(scope);
-        if (Typing.isNull(inputArray)) {
-            return null;
+        let inputArray = this.arguments[0].evaluate(scope);
+
+        if (!Typing.isObject(inputArray)) {
+            throw new Error('fn1 :: pickKeys,' + Typing.getType(inputArray));
         }
-        PickKeysFunction.validateValueIsArray(inputArray);
-        if (Typing.isNull(keysToPickFromInputArray)) {
-            return inputArray;
+        let keysToPickFromInputArray = this.arguments[1].evaluate(scope);
+
+        if (!Typing.isArray(keysToPickFromInputArray)) {
+            throw new Error('fn2 :: pickKeys,' + Typing.getType(keysToPickFromInputArray));
         }
-        PickKeysFunction.validateValueIsArray(keysToPickFromInputArray);
         return Object.keys(inputArray)
             .filter(key => keysToPickFromInputArray.includes(key))
             .reduce((obj, key) => {
-            obj[key] = inputArray[key];
-            return obj;
-        }, {});
-    }
-    static validateValueIsArray(value) {
-        if (!Typing.isArray(value)) {
-            throw new Error('fn1 :: pickKeys,' + Typing.getType(value));
-        }
+                obj[key] = inputArray[key];
+                return obj;
+            }, {});
     }
 }
 

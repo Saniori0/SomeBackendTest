@@ -1,6 +1,4 @@
-import {
-    Typing, AbstractFunction
-} from "../../internal.js"
+import {AbstractFunction, Typing} from "../../internal.js"
 
 export class PickKeysFunction extends AbstractFunction {
     protected minArguments() {
@@ -16,22 +14,14 @@ export class PickKeysFunction extends AbstractFunction {
 
         let inputArray = this.arguments[0].evaluate(scope);
 
-        if (Typing.isNull(inputArray)) {
-            return null;
-        }
-
         if (!Typing.isObject(inputArray)) {
             throw new Error('fn1 :: pickKeys,' + Typing.getType(inputArray));
         }
 
         let keysToPickFromInputArray = this.arguments[1].evaluate(scope);
 
-        if (Typing.isNull(keysToPickFromInputArray)) {
-            return inputArray;
-        }
-
         if (!Typing.isArray(keysToPickFromInputArray)) {
-            throw new Error('fn1 :: pickKeys,' + Typing.getType(keysToPickFromInputArray));
+            throw new Error('fn2 :: pickKeys,' + Typing.getType(keysToPickFromInputArray));
         }
 
         return Object.keys(inputArray)

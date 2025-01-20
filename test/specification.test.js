@@ -3137,6 +3137,73 @@ describe('specification', () => {
         'map([1, 2, 3], range(1, "a"))': new Error('optimize :: fn2 :: range,2nd,string'),
     }));
 
+    describe('pickKeys()', factory({
+        'pickKeys([], {})': new DifferentResults({
+            mongo: null,
+            php: new Error('optimize :: fn1 :: pickKeys,array'),
+            node: new Error('optimize :: fn1 :: pickKeys,array')
+        }),
+        'pickKeys([], 1)': new DifferentResults({
+            mongo: null,
+            php: new Error('optimize :: fn1 :: pickKeys,array'),
+            node: new Error('optimize :: fn1 :: pickKeys,array')
+        }),
+        'pickKeys([], [])': new DifferentResults({
+            mongo: null,
+            php: new Error('optimize :: fn1 :: pickKeys,array'),
+            node: new Error('optimize :: fn1 :: pickKeys,array')
+        }),
+        'pickKeys(1, [])': new DifferentResults({
+            mongo: null,
+            php: new Error('optimize :: fn1 :: pickKeys,number'),
+            node: new Error('optimize :: fn1 :: pickKeys,number')
+        }),
+        'pickKeys(true, [])': new DifferentResults({
+            mongo: null,
+            php: new Error('optimize :: fn1 :: pickKeys,boolean'),
+            node: new Error('optimize :: fn1 :: pickKeys,boolean')
+        }),
+        'pickKeys(false, [])': new DifferentResults({
+            mongo: null,
+            php: new Error('optimize :: fn1 :: pickKeys,boolean'),
+            node: new Error('optimize :: fn1 :: pickKeys,boolean')
+        }),
+        'pickKeys({}, {})': new DifferentResults({
+            mongo: null,
+            php: new Error('optimize :: fn2 :: pickKeys,object'),
+            node: new Error('optimize :: fn2 :: pickKeys,object')
+        }),
+        'pickKeys({}, [])': {},
+        'pickKeys({}, 1)': new DifferentResults({
+            mongo: null,
+            php: new Error('optimize :: fn2 :: pickKeys,number'),
+            node: new Error('optimize :: fn2 :: pickKeys,number')
+        }),
+        'pickKeys({}, true)': new DifferentResults({
+            mongo: null,
+            php: new Error('optimize :: fn2 :: pickKeys,boolean'),
+            node: new Error('optimize :: fn2 :: pickKeys,boolean')
+        }),
+        'pickKeys({}, false)': new DifferentResults({
+            mongo: null,
+            php: new Error('optimize :: fn2 :: pickKeys,boolean'),
+            node: new Error('optimize :: fn2 :: pickKeys,boolean')
+        }),
+        'pickKeys({"a": 1}, ["a"])': {
+            "a": 1
+        },
+        'pickKeys({"a": 1, "b": 2}, ["a"])': {
+            "a": 1
+        },
+        'pickKeys({"a": 1, "b": 2, "c": 3}, ["a", "b"])': {
+            "a": 1,
+            "b": 2
+        },
+        'pickKeys({"a": 1, "b": 2, "c": 3}, ["test", "test"])': {},
+        'pickKeys({}, ["test", "test"])': {},
+        'pickKeys({"a": 1}, [])': {}
+    }));
+
     describe('slice()', factory({
         'slice(1, true)': new Error('optimize :: fn1 :: slice,number'),
         'slice(Infinity, true)': new Error('optimize :: fn1 :: slice,number'),

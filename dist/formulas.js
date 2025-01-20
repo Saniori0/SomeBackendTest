@@ -4351,18 +4351,12 @@ class PickKeysFunction extends AbstractFunction {
     evaluate(scope) {
         this.Expr.checkEvaluationLimits(this);
         let inputArray = this.arguments[0].evaluate(scope);
-        if (Typing.isNull(inputArray)) {
-            return null;
-        }
         if (!Typing.isObject(inputArray)) {
             throw new Error('fn1 :: pickKeys,' + Typing.getType(inputArray));
         }
         let keysToPickFromInputArray = this.arguments[1].evaluate(scope);
-        if (Typing.isNull(keysToPickFromInputArray)) {
-            return inputArray;
-        }
         if (!Typing.isArray(keysToPickFromInputArray)) {
-            throw new Error('fn1 :: pickKeys,' + Typing.getType(keysToPickFromInputArray));
+            throw new Error('fn2 :: pickKeys,' + Typing.getType(keysToPickFromInputArray));
         }
         return Object.keys(inputArray)
             .filter(key => keysToPickFromInputArray.includes(key))
